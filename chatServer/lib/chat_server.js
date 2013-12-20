@@ -49,7 +49,7 @@ function joinRoom(socket, room) {
 
   var usersInRoom = io.sockets.clients(room);
   if (usersInRoom.length > 1) {
-    var usersInRoomSummary = 'Users currently in ' + room ': '
+    var usersInRoomSummary = 'Users currently in ' + room + ': ';
     for (var index in usersInRoom) {
       var userSocketId = usersInRoom[index].id;
       if (userSocketId != socket.id) {
@@ -92,5 +92,28 @@ function handleNameChangeAttempts(socket, nickNames, namesUsed) {
         });
       }
     }
+  });
+}
+
+function handleMessageBroadcasting(socket) {
+  socket.on('message', function (message) {
+    socket.broadcast.to(message.room).emit('message', {
+      text: nickNames[socket.id] + ': ' + message.text
+    });
+  });
+}
+
+function handleRoomJoining(socket) {
+  socket.on('join', function(room) {
+    socket.leave(currentRoom[socket.id]);
+    joinRoom(socket, room.newRoom);
+  });
+}
+
+function handleClientDisconnection(socket) {
+  socket.on('disconnect', function() {
+    var nameIndex = namesUsed.indexOf(nickNames[socket.id]);
+    delete namesUsed[nameIndex];
+    delete nickNames[socket.id];
   });
 }
