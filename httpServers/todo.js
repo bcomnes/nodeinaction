@@ -24,8 +24,7 @@ var server = http.createServer(function (req, res) {
       res.end(body);
     break;
     case 'DELETE':
-      var path = url.parse(req.url).pathname;
-      var i = parseInt(path.slice(1), 10);
+      var i = getNumber(req.url);
 
       if (isNaN(i)) {
         res.statusCode = 400;
@@ -38,7 +37,33 @@ var server = http.createServer(function (req, res) {
         res.end('OK\n');
       }
     break;
+    case 'PUT':
+      var j = getNumber(req.url);
+
+      if (isNaN(j)) {
+        res.statusCode = 400;
+        res.end('Invalid item id');
+      } else if (!items[j]) {
+        res.statusCode = 404;
+        res.end('Item not found');
+      } else {
+        var itemUpdate = '';
+        req.setEncoding('utf8');
+        req.on('data', function (chunk) {
+          itemUpdate += chunk;
+        });
+        req.on('end', function () {
+          items[j] = itemUpdate;
+        res.end('OK\n');
+      });
+      }
   }
 });
+
+function getNumber (itemURL) {
+  var path = url.parse(itemURL).pathname;
+  var itemNumber = parseInt(path.slice(1), 10);
+  return itemNumber;
+}
 
 server.listen(3000);
