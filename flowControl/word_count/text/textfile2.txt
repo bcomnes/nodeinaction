@@ -1,0 +1,1 @@
+Open a command-line prompt and enter the following commands to create two direc- tories: one for the example, and another within that to contain the text files you want to analyze:
