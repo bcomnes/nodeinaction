@@ -42,7 +42,27 @@ function parseRSSFeed (rss) {
 
     if (!handler.dom.items.length)
         return next(new Error('No RSS items found'));
-    var items = handler.dom.items.shift();
-    console.log(item.title);
-    console.log(item.link);
+    
+
+    for (var item in handler.dom.items ){
+    console.log(handler.dom.items[item].title);
+    console.log(handler.dom.items[item].link);
+    }
 }
+
+var tasks = [   checkForRSSFile,
+                readRSSFile,
+                downloadRSSFeed,
+                parseRSSFeed ];
+
+function next(err, result) {
+    if (err) throw err;
+
+    var currentTask = tasks.shift();
+
+    if (currentTask) {
+        currentTask(result);
+    }
+}
+
+next();
