@@ -29,7 +29,7 @@ function downloadRSSFeed (feedUrl) {
     request({uri: feedUrl}, function (err, res, body) {
         if (err) return next(err);
         if (res.statusCode != 200)
-            return next(new Error('Abnormal response code'))
+            return next(new Error('Abnormal response code'));
 
         next(null, body);
     });
@@ -66,3 +66,4 @@ function next(err, result) {
 }
 
 next();
+
