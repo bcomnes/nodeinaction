@@ -32,6 +32,10 @@ function upload(req, res) {
 
   var form = new formidable.IncomingForm();
 
+  form.on('progress', function(bytesReceived, bytesExpected) {
+    var percent = Math.floor(bytesReceived / bytesExpected * 100);
+    console.log(percent);
+  });
   form.parse(req, function(err, fields, files){
   console.log(fields);
   console.log(files);
