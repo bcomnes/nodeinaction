@@ -12,6 +12,6 @@ function hello(req, res) {
 }
 
 connect()
-  .use(logger)
   .use(hello)
+  .use(logger)
   .listen(3000);
