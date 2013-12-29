@@ -1,7 +1,7 @@
 var connect = require('connect');
 
 connect()
-  .use(logger)
+  .use(logger(':method :url'))
   .use('/admin', restrict)
   .use('/admin', admin)
   .use(hello)
@@ -11,10 +11,10 @@ function restrict(req, res, next) {
   var authorization = req.headers.authorization;
   if (!authorization) return next(new Error('Unauthroized'));
 
-  var parts = authorization.split(' ')
-  var scheme = parts[0]
-  var auth = new Buffer(parts[1], 'base64').toString().split(':')
-  var user = auth[0]
+  var parts = authorization.split(' ');
+  var scheme = parts[0];
+  var auth = new Buffer(parts[1], 'base64').toString().split(':');
+  var user = auth[0];
   var pass = auth[1];
 
   authenticateWithDatabase(user, pass, function (err) {
