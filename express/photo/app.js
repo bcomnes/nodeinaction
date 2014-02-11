@@ -9,10 +9,13 @@ var http = require('http');
 var path = require('path');
 var routes = require('./routes');
 var photos = require('./routes/photos');
+var replify = require('replify');
 
 var app = express();
+replify('realtime-101', app)
 
 // all environments
+console.log(app.get('env'))
 app.set('port', process.env.PORT || 3000);
 app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
@@ -28,6 +31,7 @@ app.set('photos', __dirname + '/public/photos');
 // development only
 if ('development' == app.get('env')) {
   app.use(express.errorHandler());
+  //require('express-repl')(app);
 }
 
 app.get('/users', user.list);
