@@ -1,6 +1,6 @@
 var photos = [];
 photos.push({
-  namme: 'Node.Js Logo',
+  name: 'Node.Js Logo',
   path: 'http://nodejs.org/images/logos/nodejs-green.png'
 });
 
