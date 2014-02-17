@@ -8,6 +8,8 @@ var routes = require('./routes');
 var user = require('./routes/user');
 var http = require('http');
 var path = require('path');
+var register = require('./routes/register');
+var messages = require('/lib/messages');
 
 var app = express();
 
@@ -22,6 +24,7 @@ app.use(express.urlencoded());
 app.use(express.methodOverride());
 app.use(express.cookieParser('your secret here'));
 app.use(express.session());
+app.use(messages());
 app.use(app.router);
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -32,6 +35,8 @@ if ('development' == app.get('env')) {
 
 app.get('/', routes.index);
 app.get('/users', user.list);
+app.get('/register', register.form);
+app.post('/register', register.submit);
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
