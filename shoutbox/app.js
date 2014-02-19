@@ -11,6 +11,7 @@ var path = require('path');
 var register = require('./routes/register');
 var messages = require('./lib/messages');
 var login = require('./routes/login');
+var entries = require('./routes/entries');
 
 var app = express();
 
@@ -34,7 +35,7 @@ if ('development' == app.get('env')) {
   app.use(express.errorHandler());
 }
 
-app.get('/', routes.index);
+app.get('/', entries.list);
 app.get('/register', register.form);
 app.post('/register', register.submit);
 app.get('/login', login.form);
