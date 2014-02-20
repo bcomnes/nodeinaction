@@ -4,6 +4,7 @@
  */
 
 var express = require('express');
+var routes = require('./routes');
 var user = require('./lib/middleware/user');
 var http = require('http');
 var path = require('path');
@@ -33,6 +34,8 @@ app.use('/api', api.auth);
 app.use(user);
 app.use(messages);
 app.use(app.router);
+app.use(routes.notFound);
+app.use(routes.error);
 
 // development only
 if ('development' == app.get('env')) {
@@ -52,6 +55,13 @@ app.get('/api/user/:id', api.user);
 app.post('/api/entry', entries.submit);
 app.get('/api/entries/:page?', page(Entry.count), api.entries);
 app.get('/:page?', page(Entry.count, 5), entries.list);
+
+if (process.env.ERROR_ROUTE) {
+  app.get('/dev/error', function(req, res, next){
+    var err = new Error('database connection failed');
+    err.type = 'database';
+    next(err);
+}); }
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
