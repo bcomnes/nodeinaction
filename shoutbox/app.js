@@ -4,7 +4,6 @@
  */
 
 var express = require('express');
-var routes = require('./routes');
 var user = require('./lib/middleware/user');
 var http = require('http');
 var path = require('path');
@@ -13,6 +12,8 @@ var messages = require('./lib/messages');
 var login = require('./routes/login');
 var entries = require('./routes/entries');
 var validate = require('./lib/middleware/validate');
+var page = require('./lib/middleware/page');
+var Entry = require('./lib/entry');
 
 var app = express();
 
@@ -36,7 +37,6 @@ if ('development' == app.get('env')) {
   app.use(express.errorHandler());
 }
 
-app.get('/', entries.list);
 app.get('/register', register.form);
 app.post('/register', register.submit);
 app.get('/login', login.form);
@@ -46,6 +46,7 @@ app.get('/post', entries.form);
 app.post('/post', validate.required('entry[title]'),
                   validate.lengthAbove('entry[title]', 4),
                   entries.submit);
+app.get('/:page?', page(Entry.count, 5), entries.list);
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));

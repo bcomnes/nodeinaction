@@ -6,6 +6,7 @@
   </head>
   <body>
     <% include menu %>
+
     <% entries.forEach(function(entry) { %>
       <div class='entry'>
         <h3><%= entry.title %></h3>
@@ -13,5 +14,8 @@
         <p>Posted by <%= entry.username %></p>
       </div>
     <% }) %>
+
+    <% include pager %>
+    
   </body>
 </html>
