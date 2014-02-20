@@ -14,6 +14,7 @@ var entries = require('./routes/entries');
 var validate = require('./lib/middleware/validate');
 var page = require('./lib/middleware/page');
 var Entry = require('./lib/entry');
+var api = require('./routes/api');
 
 var app = express();
 
@@ -28,6 +29,7 @@ app.use(express.methodOverride());
 app.use(express.cookieParser('your secret here'));
 app.use(express.session());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use('/api', api.auth);
 app.use(user);
 app.use(messages);
 app.use(app.router);
@@ -46,6 +48,9 @@ app.get('/post', entries.form);
 app.post('/post', validate.required('entry[title]'),
                   validate.lengthAbove('entry[title]', 4),
                   entries.submit);
+app.get('/api/user/:id', api.user);
+app.post('/api/entry', entries.submit);
+app.get('/api/entries/:page?', page(Entry.count), api.entries);
 app.get('/:page?', page(Entry.count, 5), entries.list);
 
 http.createServer(app).listen(app.get('port'), function(){

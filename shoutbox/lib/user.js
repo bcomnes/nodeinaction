@@ -46,8 +46,15 @@ User.prototype.hashPassword = function(fn){
       if (err) return fn(err);
       user.pass = hash;
       fn();
-    })
+    });
   });
+};
+
+User.prototype.toJSON = function() {
+  return {
+    id: this.id,
+    name: this.name
+  };
 };
 
 /*
